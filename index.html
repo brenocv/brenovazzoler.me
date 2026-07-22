@@ -1865,13 +1865,16 @@ Cannes • NY • London selections</p>
 
 <script>
   (function() {
-    const loader = document.getElementById('loader-screen');
-    const percentageEl = document.getElementById('loader-percentage');
-
-    let progress = 0;
-    let loadedCount = 0;
-    let totalCount = 0;
-    let fontLoaded = false;
+    var loader = document.getElementById('loader-screen');
+    var percentageEl = document.getElementById('loader-percentage');
+    var progress = 0;
+    var loadedCount = 0;
+    var totalCount = 0;
+    var fontLoaded = false;
+    var windowLoaded = false;
+    var criticalDone = false;
+    var isComplete = false;
+    var startTime = Date.now();
 
     function updateDisplay() {
       if (percentageEl) {
@@ -1880,117 +1883,133 @@ Cannes • NY • London selections</p>
     }
 
     function animateTo(target) {
-      const step = function() {
-        if (progress < target) {
-          progress++;
+      var current = progress;
+      function step() {
+        if (current < target) {
+          current++;
+          progress = current;
           updateDisplay();
           requestAnimationFrame(step);
         }
-      };
+      }
       requestAnimationFrame(step);
     }
 
-    function checkComplete() {
-      if (loadedCount >= totalCount && fontLoaded) {
+    function finish() {
+      if (isComplete) return;
+      isComplete = true;
+      var elapsed = Date.now() - startTime;
+      var wait = Math.max(0, 1200 - elapsed);
+      setTimeout(function() {
         animateTo(100);
         setTimeout(function() {
           if (loader) loader.classList.add('hidden');
-        }, 600);
+        }, 400);
+      }, wait);
+    }
+
+    function checkComplete() {
+      if (criticalDone && fontLoaded && windowLoaded) {
+        finish();
       }
     }
 
-    // Only track the first 5 videos (above the fold / first grid)
-    const allVideos = document.querySelectorAll('video');
-    const firstFiveVideos = Array.prototype.slice.call(allVideos, 0, 5);
+    // Get first 5 videos
+    var allVideos = document.querySelectorAll('video');
+    var firstFive = [];
+    for (var i = 0; i < allVideos.length && i < 5; i++) {
+      firstFive.push(allVideos[i]);
+    }
 
-    // Track critical CSS (Google Fonts stylesheet)
-    const fontLinks = document.querySelectorAll('link[rel="stylesheet"][href*="fonts.googleapis"]');
+    // Get font stylesheet
+    var fontLinks = document.querySelectorAll('link[rel="stylesheet"][href*="fonts.googleapis"]');
 
-    // Track images in the first viewport (hero + first grid)
-    const heroImages = document.querySelectorAll('#hero img, .about-photo img');
+    // Get critical images
+    var heroImages = document.querySelectorAll('#hero img, .about-photo img');
 
-    const allResources = [];
+    var allResources = [];
+    for (var v = 0; v < firstFive.length; v++) allResources.push(firstFive[v]);
+    for (var l = 0; l < fontLinks.length; l++) allResources.push(fontLinks[l]);
+    for (var im = 0; im < heroImages.length; im++) allResources.push(heroImages[im]);
 
-    firstFiveVideos.forEach(function(video) {
-      allResources.push(video);
-    });
+    totalCount = allResources.length || 1;
 
-    fontLinks.forEach(function(link) {
-      allResources.push(link);
-    });
-
-    heroImages.forEach(function(img) {
-      allResources.push(img);
-    });
-
-    totalCount = allResources.length;
-
-    function onResourceLoaded() {
+    function onLoaded() {
       loadedCount++;
-      var target = Math.floor((loadedCount / totalCount) * 90);
-      if (progress < target) {
-        animateTo(target);
+      var target = Math.floor((loadedCount / totalCount) * 75);
+      if (progress < target) animateTo(target);
+      if (loadedCount >= totalCount) {
+        criticalDone = true;
+        checkComplete();
       }
-      checkComplete();
     }
 
-    allResources.forEach(function(res) {
-      if (res.tagName === 'VIDEO') {
-        if (res.readyState >= 3) {
-          onResourceLoaded();
-        } else {
-          res.addEventListener('canplaythrough', onResourceLoaded, { once: true });
-          res.addEventListener('error', onResourceLoaded, { once: true });
-          res.addEventListener('stalled', onResourceLoaded, { once: true });
-          // Fallback timeout per video
-          setTimeout(onResourceLoaded, 8000);
+    for (var r = 0; r < allResources.length; r++) {
+      (function(res) {
+        var handled = false;
+        function once() {
+          if (handled) return;
+          handled = true;
+          onLoaded();
         }
-      } else if (res.tagName === 'IMG') {
-        if (res.complete && res.naturalWidth > 0) {
-          onResourceLoaded();
-        } else {
-          res.addEventListener('load', onResourceLoaded, { once: true });
-          res.addEventListener('error', onResourceLoaded, { once: true });
-        }
-      } else if (res.tagName === 'LINK') {
-        try {
-          if (res.sheet && res.sheet.cssRules) {
-            onResourceLoaded();
+        if (res.tagName === 'VIDEO') {
+          if (res.readyState >= 3) {
+            once();
           } else {
-            res.addEventListener('load', onResourceLoaded, { once: true });
-            res.addEventListener('error', onResourceLoaded, { once: true });
+            res.addEventListener('canplaythrough', once);
+            res.addEventListener('loadeddata', once);
+            res.addEventListener('error', once);
+            res.addEventListener('stalled', once);
+            res.addEventListener('abort', once);
+            setTimeout(once, 2500);
           }
-        } catch(e) {
-          res.addEventListener('load', onResourceLoaded, { once: true });
-          res.addEventListener('error', onResourceLoaded, { once: true });
+        } else if (res.tagName === 'IMG') {
+          if (res.complete && res.naturalWidth > 0) {
+            once();
+          } else {
+            res.addEventListener('load', once);
+            res.addEventListener('error', once);
+          }
+        } else if (res.tagName === 'LINK') {
+          try {
+            if (res.sheet && res.sheet.cssRules) {
+              once();
+            } else {
+              res.addEventListener('load', once);
+              res.addEventListener('error', once);
+            }
+          } catch(e) {
+            res.addEventListener('load', once);
+            res.addEventListener('error', once);
+          }
         }
-      }
-    });
+      })(allResources[r]);
+    }
 
-    // Track Google Fonts loading
+    // Font loading
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(function() {
         fontLoaded = true;
-        if (progress < 95) animateTo(95);
+        if (progress < 85) animateTo(85);
         checkComplete();
       });
     } else {
       setTimeout(function() {
         fontLoaded = true;
-        if (progress < 95) animateTo(95);
+        if (progress < 85) animateTo(85);
         checkComplete();
-      }, 2000);
+      }, 1500);
     }
 
-    // Safety timeout - force complete after 10 seconds
-    setTimeout(function() {
-      if (loader && !loader.classList.contains('hidden')) {
-        animateTo(100);
-        setTimeout(function() {
-          if (loader) loader.classList.add('hidden');
-        }, 600);
-      }
-    }, 10000);
+    // Window load
+    window.addEventListener('load', function() {
+      windowLoaded = true;
+      if (progress < 95) animateTo(95);
+      checkComplete();
+    });
+
+    // Hard timeout - always hide after 5s max
+    setTimeout(finish, 5000);
 
   })();
 </script>
