@@ -45,13 +45,11 @@ html { scroll-behavior: smooth; }
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: var(--bg-dark);
+  background-color: #000000;
   z-index: 10000;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
   transition: opacity 0.6s ease, visibility 0.6s ease;
 }
 
@@ -61,50 +59,13 @@ html { scroll-behavior: smooth; }
   pointer-events: none;
 }
 
-.loader-title {
+.loader-percentage {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 2.2rem;
-  letter-spacing: -1px;
-  text-transform: uppercase;
+  font-size: clamp(4rem, 15vw, 10rem);
   color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.loader-sub {
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 3px;
-}
-
-.loader-bar-wrap {
-  width: 180px;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
-  overflow: hidden;
-  position: relative;
-  margin-top: 10px;
-}
-
-.loader-bar-fill {
-  position: absolute;
-  top: 0; left: 0;
-  height: 100%;
-  width: 100%;
-  background: var(--primary);
-  transform: translateX(-100%);
-  animation: loaderProgress 1.5s ease-in-out infinite;
-}
-
-@keyframes loaderProgress {
-  0% { transform: translateX(-100%); }
-  50% { transform: translateX(0%); }
-  100% { transform: translateX(100%); }
+  letter-spacing: -4px;
+  line-height: 1;
 }
 
 .hero-role-link {
@@ -1500,14 +1461,7 @@ footer p {
 
 <!-- LOADING SCREEN -->
 <div id="loader-screen">
-  <div class="loader-title">
-    <span class="rec-dot"></span>
-    BRENO VAZZOLER
-  </div>
-  <div class="loader-sub" data-i18n="loader_text">Loading Experience...</div>
-  <div class="loader-bar-wrap">
-    <div class="loader-bar-fill"></div>
-  </div>
+  <div class="loader-percentage" id="loader-percentage">0%</div>
 </div>
 
 <div class="cursor" id="cursor"></div>
@@ -1910,14 +1864,135 @@ Cannes • NY • London selections</p>
 </footer>
 
 <script>
-  window.addEventListener('load', () => {
+  (function() {
     const loader = document.getElementById('loader-screen');
-    if (loader) {
-      setTimeout(() => {
-        loader.classList.add('hidden');
-      }, 500);
+    const percentageEl = document.getElementById('loader-percentage');
+
+    let progress = 0;
+    let loadedCount = 0;
+    let totalCount = 0;
+    let fontLoaded = false;
+
+    function updateDisplay() {
+      if (percentageEl) {
+        percentageEl.textContent = Math.min(progress, 99) + '%';
+      }
     }
-  });
+
+    function animateTo(target) {
+      const step = function() {
+        if (progress < target) {
+          progress++;
+          updateDisplay();
+          requestAnimationFrame(step);
+        }
+      };
+      requestAnimationFrame(step);
+    }
+
+    function checkComplete() {
+      if (loadedCount >= totalCount && fontLoaded) {
+        animateTo(100);
+        setTimeout(function() {
+          if (loader) loader.classList.add('hidden');
+        }, 600);
+      }
+    }
+
+    // Only track the first 5 videos (above the fold / first grid)
+    const allVideos = document.querySelectorAll('video');
+    const firstFiveVideos = Array.prototype.slice.call(allVideos, 0, 5);
+
+    // Track critical CSS (Google Fonts stylesheet)
+    const fontLinks = document.querySelectorAll('link[rel="stylesheet"][href*="fonts.googleapis"]');
+
+    // Track images in the first viewport (hero + first grid)
+    const heroImages = document.querySelectorAll('#hero img, .about-photo img');
+
+    const allResources = [];
+
+    firstFiveVideos.forEach(function(video) {
+      allResources.push(video);
+    });
+
+    fontLinks.forEach(function(link) {
+      allResources.push(link);
+    });
+
+    heroImages.forEach(function(img) {
+      allResources.push(img);
+    });
+
+    totalCount = allResources.length;
+
+    function onResourceLoaded() {
+      loadedCount++;
+      var target = Math.floor((loadedCount / totalCount) * 90);
+      if (progress < target) {
+        animateTo(target);
+      }
+      checkComplete();
+    }
+
+    allResources.forEach(function(res) {
+      if (res.tagName === 'VIDEO') {
+        if (res.readyState >= 3) {
+          onResourceLoaded();
+        } else {
+          res.addEventListener('canplaythrough', onResourceLoaded, { once: true });
+          res.addEventListener('error', onResourceLoaded, { once: true });
+          res.addEventListener('stalled', onResourceLoaded, { once: true });
+          // Fallback timeout per video
+          setTimeout(onResourceLoaded, 8000);
+        }
+      } else if (res.tagName === 'IMG') {
+        if (res.complete && res.naturalWidth > 0) {
+          onResourceLoaded();
+        } else {
+          res.addEventListener('load', onResourceLoaded, { once: true });
+          res.addEventListener('error', onResourceLoaded, { once: true });
+        }
+      } else if (res.tagName === 'LINK') {
+        try {
+          if (res.sheet && res.sheet.cssRules) {
+            onResourceLoaded();
+          } else {
+            res.addEventListener('load', onResourceLoaded, { once: true });
+            res.addEventListener('error', onResourceLoaded, { once: true });
+          }
+        } catch(e) {
+          res.addEventListener('load', onResourceLoaded, { once: true });
+          res.addEventListener('error', onResourceLoaded, { once: true });
+        }
+      }
+    });
+
+    // Track Google Fonts loading
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function() {
+        fontLoaded = true;
+        if (progress < 95) animateTo(95);
+        checkComplete();
+      });
+    } else {
+      setTimeout(function() {
+        fontLoaded = true;
+        if (progress < 95) animateTo(95);
+        checkComplete();
+      }, 2000);
+    }
+
+    // Safety timeout - force complete after 10 seconds
+    setTimeout(function() {
+      if (loader && !loader.classList.contains('hidden')) {
+        animateTo(100);
+        setTimeout(function() {
+          if (loader) loader.classList.add('hidden');
+        }, 600);
+      }
+    }, 10000);
+
+  })();
 </script>
 
 </body>
