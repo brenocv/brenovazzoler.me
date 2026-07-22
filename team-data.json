@@ -1,0 +1,74 @@
+{
+  "empresa": {
+    "nome": "REC Criação Sonora",
+    "ano_fundacao": 1996,
+    "aniversario": "30 anos",
+    "slogan": "Áudio que Transforma",
+    "localizacao": "Vitória, Espírito Santo, Brasil",
+    "site": "https://recsonora.com.br"
+  },
+  "historia": [
+    {
+      "ano": "1996",
+      "titulo": "Fundação",
+      "texto": "A REC Criação Sonora nasceu em Vitória, ES, com a missão de transformar ideias em experiências sonoras memoráveis."
+    },
+    {
+      "ano": "2006",
+      "titulo": "Expansão Nacional",
+      "texto": "Após uma década, a REC expandiu seus horizontes, atendendo clientes em nível nacional."
+    },
+    {
+      "ano": "2016",
+      "titulo": "20 Anos de Referência",
+      "texto": "Com 20 anos de história, a REC se reinventou e se posicionou como referência em criação sonora no Espírito Santo."
+    },
+    {
+      "ano": "2026",
+      "titulo": "30 Anos — A Jornada Continua",
+      "texto": "Hoje, a REC celebra três décadas de história com o mesmo propósito que a moveu desde o início: criar áudio que transforma."
+    }
+  ],
+  "equipe": [
+    {
+      "id": 1,
+      "nome": "Marcos Ribeiro",
+      "iniciais": "MR",
+      "cargo": "Diretor Geral",
+      "foto": "./assets/images/equipe-01.jpg",
+      "descricao": "Fundador da REC, com 30 anos de experiência em produção e direção de áudio. Líder criativo responsável pela visão artística de todos os projetos da empresa."
+    },
+    {
+      "id": 2,
+      "nome": "Lais Marchesini",
+      "iniciais": "LM",
+      "cargo": "Orçamentos e Administrativo",
+      "foto": "./assets/images/equipe-02.jpg",
+      "descricao": "Responsável pela gestão administrativa e financeira da REC, cuidando de orçamentos, relacionamento com clientes e organização operacional da empresa."
+    },
+    {
+      "id": 3,
+      "nome": "Profissional 3",
+      "iniciais": "AA",
+      "cargo": "Cargo",
+      "foto": "./assets/images/equipe-03.jpg",
+      "descricao": "Descrição do profissional. Substitua este texto pela descrição real do membro da equipe."
+    },
+    {
+      "id": 4,
+      "nome": "Profissional 4",
+      "iniciais": "AA",
+      "cargo": "Cargo",
+      "foto": "./assets/images/equipe-04.jpg",
+      "descricao": "Descrição do profissional. Substitua este texto pela descrição real do membro da equipe."
+    }
+  ],
+  "videos": [
+    {
+      "id": 1,
+      "vimeo_id": "76979871",
+      "titulo": "Destaque Principal",
+      "categoria": "Produção"
+    }
+  ]
+}

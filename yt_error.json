@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://www.reddit.com/r/obs/comments/1olfb8k/solution_to_youtube_error_153_fixing_browser",
+    "name": "SOLUTION to YouTube Error 153. Fixing Browser source",
+    "snippet": "Save the file and close the text editor. · Create a new Browser ... Read more",
+    "host_name": "www.reddit.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://groups.google.com/a/chromium.org/g/chromium-extensions/c/OUJad0q-d_g",
+    "name": "Embed YouTube error 153",
+    "snippet": "24 Sept 2025 — The problem is that YouTube asks all clients (embed youtube players) to send HTTP Referer header . YouTube official doc: https://developers ... Read more",
+    "host_name": "groups.google.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.wonderplugin.com/wordpress-tutorials/youtube-error-153",
+    "name": "YouTube Error 153 | WordPress Plugin",
+    "snippet": "5 Nov 2025 — To fix the problem, you will need to change the referrer policy of the YouTube embed URL from \"no-referrer\" to another value, for example, \" ... Read more",
+    "host_name": "www.wonderplugin.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.cloudflare.com/t/153-error-due-to-youtube-embed/855634",
+    "name": "153 error due to youtube embed - Rules",
+    "snippet": "11 Nov 2025 — This means Cloudflare is issuing a security challenge that blocks YouTube's iframe requests , which causes the player to show Error 153. 1 Like. Read more",
+    "host_name": "community.cloudflare.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/simonw/simonwillisonblog/issues/561",
+    "name": "YouTube embeds fail with a 153 error · Issue #561",
+    "snippet": "28 Nov 2025 — Fix YouTube embed error 153 by changing Referrer-Policy #562 ... Fix YouTube embed error 153 by changing Referrer-Policysimonw/simonwillisonblog ... Read more",
+    "host_name": "github.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://forum.newsblur.com/t/youtube-embed-153-error/13290",
+    "name": "YouTube embed 153 error - problem",
+    "snippet": "2 Dec 2025 — I just fixed this bug on my blog. I was getting an annoying \" Error 153 : Video player configuration error \" on some of the YouTube video embeds ( ... Read more",
+    "host_name": "forum.newsblur.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://stackoverflow.com/questions/79802987/youtube-error-153-video-player-configuration-error-when-embedding-youtube-video",
+    "name": "YouTube Error 153: Video Player Configuration Error when",
+    "snippet": "Adding Referer and origin in the Headers of request . It solved my problem with the 153 error. Share. Read more\nWe solved it by hosting a small \"YouTube Embed Relay\" - a static HTML page that lives on a regular HTTPS domain (for example deployed on CloudFlare pages) and simply hosts the YouTube iframe for you.",
+    "host_name": "stackoverflow.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://forum.obsidian.md/t/youtube-video-embed-does-not-work-video-player-configuration-error/103181",
+    "name": "Youtube Video Embed does not work",
+    "snippet": "22 Jul 2025 — I had the same Error 153 , but in my case, I was using iframe embeds . Turns out YouTube has changed the domain from youtube .com to youtube - ... Read more",
+    "host_name": "forum.obsidian.md",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://appuals.com/youtube-error-code-153-player-configuration-error",
+    "name": "Fix: YouTube “Error Code 153” (Player Configuration Error)",
+    "snippet": "If the video loads correctly in another browser, your main browser is likely blocking important headers or using corrupted cache. Open a different browser such as Chrome, Edge, or Firefox. Visit the same page showing the error. Try playing the embedded video. If it works, return to your main browser and clear its cache or reset it.",
+    "host_name": "appuals.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://thebetterwebmovement.com/youtube-embed-player-error-153-heres-step-by-step-guide",
+    "name": "YouTube Embed Player Error 153? Here’s Step-by-Step Guide",
+    "snippet": "To solve it, try steps like updating your browser, disabling extensions, or tweaking the embed code. It’s often a combination of playback limitations or mismatched embed settings. Follow the guide below to troubleshoot and resolve the issue efficiently. What Is YouTube Embed Player Error 153?",
+    "host_name": "thebetterwebmovement.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
